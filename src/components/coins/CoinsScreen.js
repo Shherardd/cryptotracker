@@ -1,8 +1,13 @@
-import React from 'react'
-import { View, Text, Pressable, StyleSheet }from 'react-native'
+import React, {useEffect, useState} from 'react'
+import { View, Text, Pressable, StyleSheet, FlatList, ActivityIndicator } from 'react-native'
+import Http from 'cryptotracker/src/libs/http'
+import CoinsItem from './CoinsItem'
 
 const CoinsScreen = (props) => {
     const { navigation } = props
+    const [coins, setCoins] = useState([])
+    const [loading, setLoading] = useState(false)
+    const uri = 'https://api.coinlore.net/api/tickers/'
     const handlePress = () => {
         navigation.navigate('CoinDetail')
     }
@@ -11,12 +16,35 @@ const CoinsScreen = (props) => {
         console.log(props)
     }
 
+    const getData = async () => {
+        const res = await Http.instance.get(uri)
+        if(res.data){
+            setCoins(res.data)
+            setLoading(false)
+        }else{
+            console.error("error en solicitud: CoinsScreen.js - getData ")
+        }
+    }
+
+    useEffect(() => {
+        setLoading(true)
+        getData()
+        return () => {
+            
+        }
+    }, [])
+
     return (
         <View style={s.container}>
-            <Text style={s.title}>henlo</Text>
-            <Pressable onPress={handlePress} style={s.btn} onLongPress={handleLongPress}>
-                <Text style={s.btnText}>Ver detalles</Text>
-            </Pressable>
+            {loading ? 
+            (<ActivityIndicator color='#000' size='large'/>)
+            : null}
+            <FlatList 
+                data={coins} 
+                renderItem={({item}) => 
+                <CoinsItem item={item}></CoinsItem>                 
+                }
+                />
         </View>
     )
 }
@@ -44,5 +72,6 @@ const s = StyleSheet.create({
         textAlign: 'center'
     }
 })
+
 
 export default CoinsScreen
