@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { View, Text, Pressable, StyleSheet, FlatList, ActivityIndicator } from 'react-native'
 import Http from 'cryptotracker/src/libs/http'
 import CoinsItem from './CoinsItem'
+import Colors from 'cryptotracker/src/res/colors'
 
 const CoinsScreen = (props) => {
     const { navigation } = props
@@ -37,7 +38,11 @@ const CoinsScreen = (props) => {
     return (
         <View style={s.container}>
             {loading ? 
-            (<ActivityIndicator color='#000' size='large'/>)
+            (<ActivityIndicator
+                style={s.loader}
+                color='#000' 
+                size='large'
+            />)
             : null}
             <FlatList 
                 data={coins} 
@@ -52,8 +57,7 @@ const CoinsScreen = (props) => {
 const s = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#c4c4c4",
-        alignItems: "center"
+        backgroundColor: Colors.charade
 
     },
     title:{
@@ -70,6 +74,9 @@ const s = StyleSheet.create({
     btnText: {
         color: "white",
         textAlign: 'center'
+    },
+    loader:{
+        marginTop: 60
     }
 })
 
