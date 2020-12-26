@@ -9,8 +9,8 @@ const CoinsScreen = (props) => {
     const [coins, setCoins] = useState([])
     const [loading, setLoading] = useState(false)
     const uri = 'https://api.coinlore.net/api/tickers/'
-    const handlePress = () => {
-        navigation.navigate('CoinDetail')
+    const handlePress = (coin) => {
+        navigation.navigate('CoinDetail', {coin})
     }
 
     const handleLongPress = () => {
@@ -47,7 +47,7 @@ const CoinsScreen = (props) => {
             <FlatList 
                 data={coins} 
                 renderItem={({item}) => 
-                <CoinsItem item={item}></CoinsItem>                 
+                <CoinsItem item={item} actionDetail={() => handlePress(item)}></CoinsItem>                 
                 }
                 />
         </View>
