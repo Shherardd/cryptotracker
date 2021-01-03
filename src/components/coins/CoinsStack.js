@@ -25,9 +25,6 @@ const CoinsStack = () => {
       <Stack.Screen
         name="CoinDetail"
         component={CoinDetailScreen}
-        options={{
-          title: 'Detalles',
-        }}
       />
     </Stack.Navigator>
   );
