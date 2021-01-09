@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Image, StyleSheet, SectionList} from 'react-native';
+import Http from 'cryptotracker/src/libs/http'
 import Colors from 'cryptotracker/src/res/colors'
 const CoinDetailScreen = (props) => {
 
   const [coin, setCoin] = useState({})
+  const [market, setMarket] = useState([])
 
   useEffect(() => {
     const coinObj = props.route.params.coin
@@ -35,6 +37,13 @@ const CoinDetailScreen = (props) => {
       }
     ]
     return sections
+  }
+
+  getMarkets = (coinid) => {
+    const url = `https://api.coinlore.net/api/coin/markets/?id=${coinId}`
+
+    const markets = Http.instance.get(url)
+    setMarket({markets})
   }
 
   return (
