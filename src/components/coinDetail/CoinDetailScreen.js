@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, StyleSheet, SectionList} from 'react-native';
+import {View, Text, Image, StyleSheet, SectionList, FlatList} from 'react-native';
+import CoinMarketItem from './coinMarketItem'
 import Http from 'cryptotracker/src/libs/http'
 import Colors from 'cryptotracker/src/res/colors'
 const CoinDetailScreen = (props) => {
@@ -11,6 +12,7 @@ const CoinDetailScreen = (props) => {
     const coinObj = props.route.params.coin
     setCoin( coinObj )
     props.navigation.setOptions({title: coinObj.name})
+    getMarkets(coinObj.id)
     return () => {};
   }, [props]);
 
@@ -24,7 +26,6 @@ const CoinDetailScreen = (props) => {
     const sections = [
       {
         title: "Market cap",
-        culito: "nalga",
         data: [coin.market_cap_usd]
       },
       {
@@ -39,11 +40,11 @@ const CoinDetailScreen = (props) => {
     return sections
   }
 
-  getMarkets = (coinid) => {
+  const getMarkets = async (coinId) => {
     const url = `https://api.coinlore.net/api/coin/markets/?id=${coinId}`
 
-    const markets = Http.instance.get(url)
-    setMarket({markets})
+    const markets = await Http.instance.get(url)
+    setMarket(markets)
   }
 
   return (
@@ -56,6 +57,7 @@ const CoinDetailScreen = (props) => {
         <Text style={s.textTitle}>{coin.name}</Text>
       </View>
       <SectionList
+        style={s.section}
         sections={getSections(coin)}
         keyExtractor={(item) => item}
         renderItem={({item}) => 
@@ -68,6 +70,16 @@ const CoinDetailScreen = (props) => {
           <Text style={s.sectionText}>{section.title}</Text>
         </View>
       }
+      />
+      <Text style={s.marketTitle}> Markets </Text>
+      <FlatList
+        style={s.marketList}
+        horizontal={true}
+        data={market}
+        renderItem={({item}) => <CoinMarketItem item={item}
+        />
+        }
+        keyExtractor={(item) => `${item.name}-${item.volume}`}
       />
     </View>
   );
@@ -94,6 +106,9 @@ const s = StyleSheet.create({
     width: 25,
     height: 25
   },
+  section: {
+    maxHeight: 220
+  },
   sectionHeader: {
     backgroundColor: 'rgba(0,0,0,0.2)',
     padding: 8,
@@ -109,6 +124,18 @@ const s = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: 'bold'
+  },
+  marketList: {
+    maxHeight: 100,
+    paddingLeft: 16
+  },
+  marketTitle: {
+    color: "#fff",
+    fontSize: 16,
+    marginBottom: 16,
+    marginLeft: 16,
+    fontWeight: 'bold'
+
   }
 })
 
