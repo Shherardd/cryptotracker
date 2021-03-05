@@ -9,11 +9,13 @@ import {
 } from 'react-native';
 import Http from 'cryptotracker/src/libs/http';
 import CoinsItem from './CoinsItem';
+import CoinsSearch from './CoinsSearch'
 import Colors from 'cryptotracker/src/res/colors';
 
 const CoinsScreen = (props) => {
   const {navigation} = props;
   const [coins, setCoins] = useState([]);
+  const [allCoins, setAllCoins] = useState([]);
   const [loading, setLoading] = useState(false);
   const uri = 'https://api.coinlore.net/api/tickers/';
   const handlePress = (coin) => {
@@ -24,10 +26,19 @@ const CoinsScreen = (props) => {
     console.log(props);
   };
 
+  const handleSearch = (query) => {
+    const coinsFiltered = allCoins.filter((coin) => {
+      return coin.name.toLowerCase().includes(query.toLowerCase()) || 
+      coin.symbol.toLowerCase().includes(query.toLowerCase())
+    })
+    setCoins(coinsFiltered);
+  }
+
   const getData = async () => {
     const res = await Http.instance.get(uri);
     if (res.data) {
       setCoins(res.data);
+      setAllCoins(res.data); 
       setLoading(false);
     } else {
       console.error('error en solicitud: CoinsScreen.js - getData ');
@@ -45,6 +56,7 @@ const CoinsScreen = (props) => {
       {loading ? (
         <ActivityIndicator style={s.loader} color="#000" size="large" />
       ) : null}
+      <CoinsSearch onChange={handleSearch}/>
       <FlatList
         data={coins}
         renderItem={({item}) => (
