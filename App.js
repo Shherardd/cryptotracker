@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import CoinsStack from 'cryptotracker/src/components/coins/CoinsStack'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import Colors from 'cryptotracker/src/res/colors';
+import FavoritesStack from 'cryptotracker/src/components/favorites/FavoritesStack'
 
 const Tabs = createBottomTabNavigator()
 
@@ -43,7 +44,7 @@ const App = () => {
           />
           <Tabs.Screen 
           name="Favs" 
-          component={ CoinsStack }
+          component={ FavoritesStack }
           options={{
             tabBarIcon: ({ size, color }) => (
               <Image 
