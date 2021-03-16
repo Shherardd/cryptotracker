@@ -22,7 +22,7 @@ class Http {
       return json;
     } catch (error) {
       console.error('http error', error);
-      throw Error(err);
+      throw Error(error);
     }
   };
 }
